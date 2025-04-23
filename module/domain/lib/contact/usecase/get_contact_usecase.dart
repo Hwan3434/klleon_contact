@@ -1,5 +1,6 @@
 import 'package:domain/contact/common/k_result.dart';
 import 'package:domain/contact/entity/contact.dart';
+import 'package:domain/contact/entity/contact_filter.dart';
 import 'package:domain/contact/repository/contact_repository.dart';
 
 class GetContactsUseCase {
@@ -7,9 +8,9 @@ class GetContactsUseCase {
 
   GetContactsUseCase(this.repository);
 
-  Future<KResult<List<Contact>>> call() async {
+  Future<KResult<List<Contact>>> call({required ContactFilter filter}) async {
     try {
-      final contacts = await repository.getAllContacts();
+      final contacts = await repository.getContacts(filter);
       return KResult.success(contacts);
     } catch (e) {
       return KResult.failure(e);
