@@ -1,4 +1,4 @@
-import 'package:data/contact/common/drift/app_database.dart';
+import 'package:data/contact/common/drift/k_drift_database.dart';
 import 'package:domain/contact/entity/contact_filter.dart';
 import 'package:drift/drift.dart';
 
@@ -8,12 +8,13 @@ part 'contact_dao.g.dart';
 
 /// Drift의 DAO 클래스, ContactTable에 대한 데이터 접근 처리
 @DriftAccessor(tables: [ContactTable])
-class ContactDao extends DatabaseAccessor<AppDatabase> with _$ContactDaoMixin {
-  ContactDao(AppDatabase db) : super(db);
+class ContactDao extends DatabaseAccessor<KDriftDatabase>
+    with _$ContactDaoMixin {
+  ContactDao(KDriftDatabase db) : super(db);
 
   /// 페이징 처리 및 정렬, 검색 조건이 포함된 연락처 조회
   Future<List<ContactTableData>> getContactsWithPaging({
-    required int page,
+    required int pageNumber,
     required int pageSize,
     String? query,
     SortOrder? sortOrder,
@@ -25,7 +26,7 @@ class ContactDao extends DatabaseAccessor<AppDatabase> with _$ContactDaoMixin {
             : OrderingTerm.desc(contactTable.id);
 
     // 페이지네이션 오프셋 계산
-    final offset = (page - 1) * pageSize;
+    final offset = (pageNumber - 1) * pageSize;
 
     // 검색 조건 설정: 이름 또는 전화번호에 검색어 포함 여부
     final whereClause =

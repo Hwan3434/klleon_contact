@@ -1,6 +1,5 @@
 import 'package:data/contact/datasource/contact_local_datasource.dart';
 import 'package:data/contact/dto/contact_dto.dart';
-import 'package:domain/contact/entity/contact_filter.dart';
 import 'package:domain/domain.dart';
 
 class ContactRepositoryImpl implements ContactRepository {
@@ -10,8 +9,11 @@ class ContactRepositoryImpl implements ContactRepository {
 
   @override
   Future<List<Contact>> getContacts(ContactFilter filter) async {
-    final dtos = await _localDatasource.getContacts(filter);
-    return dtos.map((dto) => dto.toEntity()).toList();
+    if (filter.pageNumber < 1) {
+      throw ArgumentError('페이지는 1부터 시작입니다. 1보다 작은 값은 허용되지 않습니다.');
+    }
+    final contactDTOs = await _localDatasource.getContacts(filter);
+    return contactDTOs.map((dto) => dto.toEntity()).toList();
   }
 
   @override

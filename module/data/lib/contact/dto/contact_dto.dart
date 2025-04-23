@@ -12,11 +12,9 @@ class ContactDTO with _$ContactDTO {
     required String phoneNumber,
   }) = _ContactDTO;
 
-  // JSON 변환 (Drift 쓸 때도 쓸 수 있음)
   factory ContactDTO.fromJson(Map<String, dynamic> json) =>
       _$ContactDTOFromJson(json);
 
-  // Entity 변환
   factory ContactDTO.fromEntity(Contact contact) {
     return ContactDTO(
       id: contact.id,

@@ -8,11 +8,12 @@ import 'package:path_provider/path_provider.dart';
 import 'contact_dao.dart';
 import 'contact_table.dart';
 
-part 'app_database.g.dart';
+part 'k_drift_database.g.dart';
 
 @DriftDatabase(tables: [ContactTable], daos: [ContactDao])
-class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+class KDriftDatabase extends _$KDriftDatabase {
+  KDriftDatabase() : super(_openConnection());
+  KDriftDatabase.test(NativeDatabase super.db);
 
   @override
   int get schemaVersion => 1;

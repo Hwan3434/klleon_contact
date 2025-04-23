@@ -1,5 +1,5 @@
-import 'package:data/contact/common/drift/app_database.dart';
 import 'package:data/contact/common/drift/contact_dao.dart';
+import 'package:data/contact/common/drift/k_drift_database.dart';
 import 'package:data/contact/datasource/contact_local_datasource.dart';
 import 'package:data/contact/dto/contact_dto.dart';
 import 'package:domain/contact/entity/contact_filter.dart';
@@ -15,7 +15,7 @@ class ContactLocalDatasourceImpl implements ContactLocalDatasource {
     return await _contactDao
         .getContactsWithPaging(
           query: filter.query,
-          page: filter.page,
+          pageNumber: filter.pageNumber,
           pageSize: filter.pageSize,
           sortOrder: filter.sortOrder,
         )
@@ -38,8 +38,6 @@ class ContactLocalDatasourceImpl implements ContactLocalDatasource {
         id: Value(contact.id),
         name: Value(contact.name),
         phone: Value(contact.phoneNumber),
-        createdAt: Value(DateTime.now()), // 새로 생성할 때는 현재 시간
-        updatedAt: const Value.absent(), // 기본값 null
       ),
     );
   }
@@ -51,8 +49,6 @@ class ContactLocalDatasourceImpl implements ContactLocalDatasource {
         id: Value(contact.id),
         name: Value(contact.name),
         phone: Value(contact.phoneNumber),
-        createdAt: Value(DateTime.now()), // 새로 생성할 때는 현재 시간
-        updatedAt: const Value.absent(), // 기본값 null
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:domain/contact/entity/contact_filter.dart';
 import 'package:domain/domain.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -16,7 +15,7 @@ void main() {
         Contact(id: 2, name: '김철수', phone: '010-9876-5432'),
       ];
 
-      final filter = ContactFilter(page: 1, pageSize: 20);
+      final filter = ContactFilter(pageNumber: 1, pageSize: 20);
 
       when(
         mockRepository.getContacts(filter),
@@ -48,7 +47,7 @@ void main() {
         ),
       );
 
-      final filter = ContactFilter(page: 1, pageSize: 10);
+      final filter = ContactFilter(pageNumber: 1, pageSize: 10);
       when(
         mockRepository.getContacts(filter),
       ).thenAnswer((_) async => contacts.take(10).toList());
@@ -79,7 +78,7 @@ void main() {
         ),
       );
 
-      final filter = ContactFilter(page: 1, pageSize: 10);
+      final filter = ContactFilter(pageNumber: 1, pageSize: 10);
       when(
         mockRepository.getContacts(filter),
       ).thenAnswer((_) async => contacts);
@@ -102,7 +101,7 @@ void main() {
       final mockRepository = MockContactRepository();
       final useCase = GetContactsUseCase(mockRepository);
 
-      final filter = ContactFilter(page: 1, pageSize: 20);
+      final filter = ContactFilter(pageNumber: 1, pageSize: 20);
 
       when(mockRepository.getContacts(filter)).thenThrow(Exception('DB 오류'));
 
