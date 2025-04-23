@@ -1,3 +1,11 @@
+# Custom
+
+*.lock
+*.dart.vm.json
+*.freezed.dart
+*.g.dart
+*.mocks.dart
+
 # Miscellaneous
 *.class
 *.log

@@ -1,5 +1,5 @@
+import 'package:domain/domain.dart';
 import 'package:go_router/go_router.dart';
-import 'package:klleon/main.dart';
 import 'package:klleon/roots/contact_detail_root.dart';
 import 'package:klleon/roots/contact_root.dart';
 import 'package:klleon/roots/splash_root.dart';
@@ -32,7 +32,7 @@ final contactRouter = GoRouter(
         GoRoute(
           path: RouterPath.contactDetail,
           builder: (context, state) {
-            final contactId = state.pathParameters['contactId'];
+            // final contactId = state.pathParameters['contactId'];
             return ContactDetailRoot(
               onPressed: () {
                 logger.d("click");

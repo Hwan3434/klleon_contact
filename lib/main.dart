@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:klleon/klleon_theme_widget.dart';
-import 'package:logger/web.dart';
-
-final logger = Logger();
 
 void main() {
   runApp(KlleonApp());
