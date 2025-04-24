@@ -12,6 +12,32 @@ class ContactDao extends DatabaseAccessor<KDriftDatabase>
     with _$ContactDaoMixin {
   ContactDao(KDriftDatabase db) : super(db);
 
+  Stream<List<ContactTableData>> watchContactsWithPaging({
+    required int pageNumber,
+    required int pageSize,
+    String? query,
+    SortOrder? sortOrder,
+  }) {
+    final order =
+        (sortOrder ?? SortOrder.asc) == SortOrder.asc
+            ? OrderingTerm.asc(contactTable.id)
+            : OrderingTerm.desc(contactTable.id);
+
+    final offset = (pageNumber - 1) * pageSize;
+
+    final whereClause =
+        query != null && query.isNotEmpty
+            ? contactTable.name.contains(query) |
+                contactTable.phone.contains(query)
+            : const Constant(true);
+
+    return (select(contactTable)
+          ..where((tbl) => whereClause)
+          ..orderBy([(_) => order])
+          ..limit(pageSize, offset: offset))
+        .watch();
+  }
+
   /// 페이징 처리 및 정렬, 검색 조건이 포함된 연락처 조회
   Future<List<ContactTableData>> getContactsWithPaging({
     required int pageNumber,

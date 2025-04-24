@@ -11,6 +11,26 @@ class ContactLocalDatasourceImpl implements ContactLocalDatasource {
   ContactLocalDatasourceImpl(this._contactDao);
 
   @override
+  Stream<List<ContactDTO>> streamContacts(ContactFilter filter) {
+    return _contactDao
+        .watchContactsWithPaging(
+          pageNumber: filter.pageNumber,
+          pageSize: filter.pageSize,
+          query: filter.query,
+          sortOrder: filter.sortOrder,
+        )
+        .map((contacts) {
+          return contacts.map((contact) {
+            return ContactDTO(
+              id: contact.id,
+              name: contact.name,
+              phoneNumber: contact.phone,
+            );
+          }).toList();
+        });
+  }
+
+  @override
   Future<List<ContactDTO>> getContacts(ContactFilter filter) async {
     return await _contactDao
         .getContactsWithPaging(

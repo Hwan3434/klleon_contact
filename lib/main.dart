@@ -1,7 +1,9 @@
+import 'package:di/di.dart';
 import 'package:flutter/material.dart';
 import 'package:klleon/klleon_theme_widget.dart';
 
 void main() {
+  setupDi();
   runApp(KlleonApp());
 }
 

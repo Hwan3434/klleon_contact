@@ -113,5 +113,60 @@ void main() {
 
       verify(mockRepository.getContacts(filter)).called(1);
     });
+
+    test('streamContacts 호출 시 데이터 스트림을 성공적으로 반환한다', () async {
+      // Arrange
+      final mockRepository = MockContactRepository();
+      final useCase = GetContactsUseCase(mockRepository);
+      final contactsStream = Stream.fromIterable([
+        [Contact(id: 1, name: '홍길동', phone: '010-1234-5678')],
+        [
+          Contact(id: 1, name: '홍길동', phone: '010-1234-5678'),
+          Contact(id: 2, name: '김철수', phone: '010-9876-5432'),
+        ],
+      ]);
+      final filter = ContactFilter(pageNumber: 1, pageSize: 20);
+
+      when(
+        mockRepository.streamContacts(filter),
+      ).thenAnswer((_) => contactsStream);
+
+      final resultStream = useCase.stream(filter: filter);
+
+      await expectLater(
+        resultStream,
+        emitsInOrder([
+          isA<Success<List<Contact>>>().having(
+            (s) => s.data.length,
+            '데이터 길이',
+            1,
+          ),
+          isA<Success<List<Contact>>>().having(
+            (s) => s.data.length,
+            '데이터 길이',
+            2,
+          ),
+        ]),
+      );
+
+      verify(mockRepository.streamContacts(filter)).called(1);
+    });
+
+    test('streamContacts 호출 시 에러 스트림을 반환한다', () async {
+      final mockRepository = MockContactRepository();
+      final useCase = GetContactsUseCase(mockRepository);
+      final errorStream = Stream<List<Contact>>.error(Exception('스트림 오류'));
+      final filter = ContactFilter(pageNumber: 1, pageSize: 20);
+
+      when(
+        mockRepository.streamContacts(filter),
+      ).thenAnswer((_) => errorStream);
+
+      final resultStream = useCase.stream(filter: filter);
+
+      await expectLater(resultStream, emits(isA<Failure<List<Contact>>>()));
+
+      verify(mockRepository.streamContacts(filter)).called(1);
+    });
   });
 }
