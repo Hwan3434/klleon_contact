@@ -32,36 +32,52 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // contact 정보 구독
-    final vm = ref.watch(contactProvider);
+    final contactCount = ref.watch(
+      contactProvider.select((s) => s.contacts.length),
+    );
+
+    logger.d("_ContactScreenState build");
+
     return Scaffold(
       appBar: AppBar(title: Text('연락처')),
       body: Builder(
         builder: (context) {
-          // 연락처가 없을때
-          if (vm.contacts.isEmpty) {
-            // 최초 연락처 불러오기 중
-            if (vm.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            // 에러로 떨어져도 isLoading을 false로 바꿔주기 때문에 여기선 가져온 연락처가 없음
-            return Center(child: Text("연락처가 없습니다."));
+          logger.d("Temper build");
+          final isLoading = ref.watch(
+            contactProvider.select((s) => s.isLoading),
+          );
+          final hasMore = ref.watch(contactProvider.select((s) => s.hasMore));
+          if (isLoading && contactCount == 0) {
+            // 초기 로딩 중
+            return const Center(child: CircularProgressIndicator());
           }
+          if (contactCount == 0) {
+            // 연락처가 없을 때
+            return const Center(child: Text('연락처가 없습니다.'));
+          }
+
           return ListView.builder(
             controller: _scrollController,
-            itemCount: vm.contacts.length + (vm.hasMore ? 1 : 0),
+            itemCount: contactCount + (hasMore ? 1 : 0),
             itemBuilder: (context, index) {
-              // 더 불러오는 중 위젯
-              if (index == vm.contacts.length && vm.hasMore) {
+              logger.d("Item build");
+              if (index == contactCount) {
+                // 더 불러오기 중 위젯
                 return const Center(child: CircularProgressIndicator());
               }
-              final id = vm.contacts[index].id;
-              final contact = ref.watch(contactDetailProvider(id));
-              return ListTile(
-                key: ValueKey(contact.id),
-                title: Text(contact.name),
-                subtitle: Text(contact.phone),
-                onTap: () => widget.onPressed?.call(contact.id),
+
+              final contact = ref
+                  .read(contactProvider.notifier)
+                  .getContact(index);
+
+              return InkWell(
+                onTap: () {
+                  widget.onPressed?.call(contact.id);
+                },
+                child: _ContactItem(
+                  key: ValueKey(contact.id),
+                  contactId: contact.id,
+                ),
               );
             },
           );
@@ -69,9 +85,25 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          logger.d("FloatingActionButton clicked");
+          ref
+              .read(contactProvider.notifier)
+              .updateContact(Contact(id: 8, name: "정환8", phone: "1234"));
+          ;
         },
       ),
     );
+  }
+}
+
+class _ContactItem extends ConsumerWidget {
+  final int contactId;
+
+  const _ContactItem({super.key, required this.contactId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contact = ref.watch(contactDetailProvider(contactId));
+    logger.d("_ContactItem build for ${contact.id}");
+    return ListTile(title: Text(contact.name), subtitle: Text(contact.phone));
   }
 }

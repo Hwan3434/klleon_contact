@@ -74,6 +74,10 @@ class ContactListNotifier extends StateNotifier<ContactState> {
     });
   }
 
+  Contact getContact(int index) {
+    return state.contacts[index];
+  }
+
   void createContact(Contact contact) async {
     final result = await _createContactUseCase(contact);
     result.when(
