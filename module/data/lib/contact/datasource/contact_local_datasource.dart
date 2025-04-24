@@ -5,5 +5,5 @@ abstract class ContactLocalDatasource {
   Future<List<ContactDTO>> getContacts(ContactFilter filter);
   Future<void> createContact(ContactDTO contact);
   Future<void> updateContact(ContactDTO contact);
-  Future<void> deleteContact(int id);
+  Future<void> deleteContact(String id);
 }

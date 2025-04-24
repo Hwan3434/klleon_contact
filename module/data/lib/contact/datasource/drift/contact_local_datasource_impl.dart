@@ -54,7 +54,7 @@ class ContactLocalDatasourceImpl implements ContactLocalDatasource {
   }
 
   @override
-  Future<void> deleteContact(int id) {
+  Future<void> deleteContact(String id) {
     return _contactDao.deleteContact(id);
   }
 }

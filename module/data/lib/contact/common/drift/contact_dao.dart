@@ -52,6 +52,6 @@ class ContactDao extends DatabaseAccessor<KDriftDatabase>
       update(contactTable).replace(contact);
 
   /// 연락처 삭제
-  Future<int> deleteContact(int id) =>
+  Future<int> deleteContact(String id) =>
       (delete(contactTable)..where((tbl) => tbl.id.equals(id))).go();
 }

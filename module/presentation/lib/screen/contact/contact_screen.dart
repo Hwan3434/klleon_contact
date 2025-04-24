@@ -5,7 +5,7 @@ import 'package:presentation/screen/contact/contact_detail_provider.dart';
 
 import 'contact_provider.dart';
 
-typedef GoContactDetailCallback = void Function(int contactId);
+typedef GoContactDetailCallback = void Function(String contactId);
 
 class ContactScreen extends ConsumerStatefulWidget {
   final GoContactDetailCallback? onPressed;
@@ -83,20 +83,12 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ref
-              .read(contactProvider.notifier)
-              .updateContact(Contact(id: 8, name: "정환8", phone: "1234"));
-          ;
-        },
-      ),
     );
   }
 }
 
 class _ContactItem extends ConsumerWidget {
-  final int contactId;
+  final String contactId;
 
   const _ContactItem({super.key, required this.contactId});
 

@@ -1,4 +1,3 @@
-import 'package:domain/domain.dart';
 import 'package:go_router/go_router.dart';
 import 'package:klleon/roots/contact_detail_root.dart';
 import 'package:klleon/roots/contact_root.dart';
@@ -32,15 +31,8 @@ final contactRouter = GoRouter(
         GoRoute(
           path: RouterPath.contactDetail,
           builder: (context, state) {
-            final contactId = int.parse(
-              state.pathParameters['contactId'] ?? "0",
-            );
-            return ContactDetailRoot(
-              contactId: contactId,
-              onPressed: () {
-                logger.d("click");
-              },
-            );
+            final contactId = state.pathParameters['contactId'];
+            return ContactDetailRoot(contactId: contactId);
           },
         ),
       ],

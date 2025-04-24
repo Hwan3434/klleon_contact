@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'contact_provider.dart';
 
-final contactDetailProvider = Provider.family<Contact, int>((ref, id) {
+final contactDetailProvider = Provider.family<Contact, String>((ref, id) {
   final contact = ref.watch(
     contactProvider.select(
       (value) => value.contacts.singleWhere((element) => element.id == id),

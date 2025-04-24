@@ -7,7 +7,7 @@ part 'contact_dto.g.dart';
 @freezed
 class ContactDTO with _$ContactDTO {
   const factory ContactDTO({
-    required int id,
+    required String id,
     required String name,
     required String phoneNumber,
   }) = _ContactDTO;

@@ -11,7 +11,7 @@ void main() {
       final mockRepository = MockContactRepository();
       final useCase = UpdateContactUseCase(mockRepository);
       final updatedContact = Contact(
-        id: 1,
+        id: "1",
         name: '홍길동',
         phone: '010-9999-8888',
       );
@@ -32,7 +32,7 @@ void main() {
       // Arrange
       final mockRepository = MockContactRepository();
       final useCase = UpdateContactUseCase(mockRepository);
-      final contact = Contact(id: 1, name: '홍길동', phone: '010-1234-5678');
+      final contact = Contact(id: "1", name: '홍길동', phone: '010-1234-5678');
 
       when(mockRepository.updateContact(contact)).thenThrow(Exception('DB 오류'));
 

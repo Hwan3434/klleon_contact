@@ -29,7 +29,7 @@ class ContactRepositoryImpl implements ContactRepository {
   }
 
   @override
-  Future<void> deleteContact(int id) async {
+  Future<void> deleteContact(String id) async {
     await _localDatasource.deleteContact(id);
   }
 }

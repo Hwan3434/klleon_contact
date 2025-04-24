@@ -5,5 +5,5 @@ abstract class ContactRepository {
   Future<List<Contact>> getContacts(ContactFilter filter);
   Future<void> createContact(Contact contact);
   Future<void> updateContact(Contact contact);
-  Future<void> deleteContact(int id);
+  Future<void> deleteContact(String id);
 }

@@ -10,7 +10,7 @@ void main() {
       // Arrange
       final mockRepository = MockContactRepository();
       final useCase = DeleteContactUseCase(mockRepository);
-      const contactId = 1;
+      const contactId = "1";
 
       when(
         mockRepository.deleteContact(contactId),
@@ -28,7 +28,7 @@ void main() {
       // Arrange
       final mockRepository = MockContactRepository();
       final useCase = DeleteContactUseCase(mockRepository);
-      const contactId = 1;
+      const contactId = "1";
 
       when(
         mockRepository.deleteContact(contactId),

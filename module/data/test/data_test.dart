@@ -19,9 +19,9 @@ void main() {
   });
 
   group('ContactRepositoryImpl 테스트', () {
-    final testContact = Contact(id: 1, name: '홍길동', phone: '01012345678');
+    final testContact = Contact(id: "1", name: '홍길동', phone: '01012345678');
     final testContactDTO = ContactDTO(
-      id: 1,
+      id: "1",
       name: '홍길동',
       phoneNumber: '01012345678',
     );
@@ -55,11 +55,11 @@ void main() {
     });
 
     test('연락처 삭제가 잘 되는지 테스트', () async {
-      when(mockDatasource.deleteContact(1)).thenAnswer((_) async => {});
+      when(mockDatasource.deleteContact("1")).thenAnswer((_) async => {});
 
-      await repository.deleteContact(1);
+      await repository.deleteContact("1");
 
-      verify(mockDatasource.deleteContact(1)).called(1);
+      verify(mockDatasource.deleteContact("1")).called(1);
     });
 
     test('연락처 목록을 오름차순으로 잘 가져오는지 테스트', () async {
@@ -69,8 +69,8 @@ void main() {
         sortOrder: SortOrder.asc,
       );
       final mockDTOs = [
-        ContactDTO(id: 1, name: 'Alice', phoneNumber: '1234567890'),
-        ContactDTO(id: 2, name: 'Bob', phoneNumber: '0987654321'),
+        ContactDTO(id: "1", name: 'Alice', phoneNumber: '1234567890'),
+        ContactDTO(id: "2", name: 'Bob', phoneNumber: '0987654321'),
       ];
 
       when(
@@ -92,8 +92,8 @@ void main() {
         sortOrder: SortOrder.desc,
       );
       final mockDTOs = [
-        ContactDTO(id: 2, name: 'Bob', phoneNumber: '0987654321'),
-        ContactDTO(id: 1, name: 'Alice', phoneNumber: '1234567890'),
+        ContactDTO(id: "2", name: 'Bob', phoneNumber: '0987654321'),
+        ContactDTO(id: "1", name: 'Alice', phoneNumber: '1234567890'),
       ];
 
       when(

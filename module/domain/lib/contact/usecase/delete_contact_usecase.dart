@@ -6,7 +6,7 @@ class DeleteContactUseCase {
 
   DeleteContactUseCase(this.repository);
 
-  Future<KResult<void>> call(int id) async {
+  Future<KResult<void>> call(String id) async {
     try {
       await repository.deleteContact(id);
       return KResult.success(null);

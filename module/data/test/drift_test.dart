@@ -24,7 +24,7 @@ void main() {
   });
 
   test('연락처를 추가하고 조회할 수 있다', () async {
-    final contact = Contact(id: 1, name: '홍길동', phone: '010-1234-5678');
+    final contact = Contact(id: "1", name: '홍길동', phone: '010-1234-5678');
     await repository.createContact(contact);
 
     final result = await repository.getContacts(
@@ -37,10 +37,14 @@ void main() {
   });
 
   test('연락처를 수정하고 변경사항을 확인할 수 있다', () async {
-    final contact = Contact(id: 1, name: '홍길동', phone: '010-1234-5678');
+    final contact = Contact(id: "1", name: '홍길동', phone: '010-1234-5678');
     await repository.createContact(contact);
 
-    final updatedContact = Contact(id: 1, name: '이순신', phone: '010-8765-4321');
+    final updatedContact = Contact(
+      id: "1",
+      name: '이순신',
+      phone: '010-8765-4321',
+    );
     await repository.updateContact(updatedContact);
 
     final result = await repository.getContacts(
@@ -53,10 +57,10 @@ void main() {
   });
 
   test('연락처를 삭제하고 리스트가 비어있는지 확인할 수 있다', () async {
-    final contact = Contact(id: 1, name: '홍길동', phone: '010-1234-5678');
+    final contact = Contact(id: "1", name: '홍길동', phone: '010-1234-5678');
     await repository.createContact(contact);
 
-    await repository.deleteContact(1);
+    await repository.deleteContact("1");
 
     final result = await repository.getContacts(
       ContactFilter(pageNumber: 1, pageSize: 10),
@@ -68,7 +72,7 @@ void main() {
   test('연락처가 11개 있을 때 10개씩 페이징하여 가져올 수 있다', () async {
     for (int i = 0; i < 11; i++) {
       await repository.createContact(
-        Contact(id: i, name: '이름$i', phone: '010-0000-000$i'),
+        Contact(id: "$i", name: '이름$i', phone: '010-0000-000$i'),
       );
     }
 
@@ -86,7 +90,7 @@ void main() {
   test('연락처가 9개 있을 때 10개 요청하면 9개만 가져온다', () async {
     for (int i = 0; i < 9; i++) {
       await repository.createContact(
-        Contact(id: i, name: '이름$i', phone: '010-0000-000$i'),
+        Contact(id: "$i", name: '이름$i', phone: '010-0000-000$i'),
       );
     }
 

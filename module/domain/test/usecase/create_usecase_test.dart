@@ -10,7 +10,7 @@ void main() {
       // Arrange
       final mockRepository = MockContactRepository();
       final useCase = CreateContactUseCase(mockRepository);
-      final contact = Contact(id: 1, name: '홍길동', phone: '010-1234-5678');
+      final contact = Contact(id: "1", name: '홍길동', phone: '010-1234-5678');
 
       when(mockRepository.createContact(contact)).thenAnswer((_) async => null);
 
@@ -26,7 +26,7 @@ void main() {
       // Arrange
       final mockRepository = MockContactRepository();
       final useCase = CreateContactUseCase(mockRepository);
-      final contact = Contact(id: 1, name: '홍길동', phone: '010-1234-5678');
+      final contact = Contact(id: "1", name: '홍길동', phone: '010-1234-5678');
 
       when(mockRepository.createContact(contact)).thenThrow(Exception('DB 오류'));
 

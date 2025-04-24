@@ -11,8 +11,8 @@ void main() {
       final mockRepository = MockContactRepository();
       final useCase = GetContactsUseCase(mockRepository);
       final contacts = [
-        Contact(id: 1, name: '홍길동', phone: '010-1234-5678'),
-        Contact(id: 2, name: '김철수', phone: '010-9876-5432'),
+        Contact(id: "1", name: '홍길동', phone: '010-1234-5678'),
+        Contact(id: "2", name: '김철수', phone: '010-9876-5432'),
       ];
 
       final filter = ContactFilter(pageNumber: 1, pageSize: 20);
@@ -41,7 +41,7 @@ void main() {
       final contacts = List.generate(
         11,
         (index) => Contact(
-          id: index + 1,
+          id: "$index" + "1",
           name: '이름$index',
           phone: '010-0000-000$index',
         ),
@@ -72,7 +72,7 @@ void main() {
       final contacts = List.generate(
         9,
         (index) => Contact(
-          id: index + 1,
+          id: "$index" + "1",
           name: '이름$index',
           phone: '010-0000-000$index',
         ),
