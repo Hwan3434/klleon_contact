@@ -23,8 +23,8 @@ final contactRouter = GoRouter(
       path: RouterPath.contact,
       builder: (context, state) {
         return ContactRoot(
-          onPressed: () {
-            context.go("${RouterPath.contact}/1");
+          onPressed: (contactId) {
+            context.go("${RouterPath.contact}/$contactId");
           },
         );
       },

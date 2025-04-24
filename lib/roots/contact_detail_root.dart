@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presentation/contact_detail_screen.dart';
 
 class ContactDetailRoot extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -6,13 +7,6 @@ class ContactDetailRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: MaterialButton(
-          onPressed: onPressed,
-          child: const Text('ContactDetailRoot'),
-        ),
-      ),
-    );
+    return ContactDetailScreen(onPressed: onPressed);
   }
 }

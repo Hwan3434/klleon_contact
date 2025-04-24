@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:presentation/contact_screen.dart';
 
 class ContactRoot extends StatelessWidget {
-  final VoidCallback? onPressed;
+  final GoContactDetailCallback? onPressed;
   const ContactRoot({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: MaterialButton(
-          onPressed: onPressed,
-          child: const Text('ContactRoot'),
-        ),
-      ),
-    );
+    return ContactScreen(onPressed: onPressed);
   }
 }

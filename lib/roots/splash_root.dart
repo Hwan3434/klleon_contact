@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presentation/splash_screen.dart';
 
 class SplashRoot extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -6,13 +7,6 @@ class SplashRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: MaterialButton(
-          onPressed: onPressed,
-          child: const Text('Splash'),
-        ),
-      ),
-    );
+    return SplashScreen(onPressed: onPressed);
   }
 }
