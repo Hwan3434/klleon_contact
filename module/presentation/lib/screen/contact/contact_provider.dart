@@ -3,6 +3,8 @@ import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presentation/screen/contact/contact_state.dart';
 
+import 'contact_event.dart';
+
 final contactProvider =
     StateNotifierProvider<ContactListNotifier, ContactState>((ref) {
       final c = getIt<CreateContactUseCase>();
@@ -86,20 +88,27 @@ class ContactListNotifier extends StateNotifier<ContactState> {
     result.when(
       success: (_) {
         // 성공 시 UI 업데이트 로직 추가 가능
-        state = state.copyWith(contacts: [...state.contacts, contact]);
+        state = state.copyWith(
+          event: ContactEvent.createSuccess(contact),
+          contacts: [...state.contacts, contact],
+        );
       },
       failure: (error) {
         // 에러 처리 로직 추가 가능
+        state = state.copyWith(event: ContactEvent.createFailure(error));
       },
     );
   }
 
   void updateContact(Contact contact) async {
+    logger.d("일번");
     final result = await _updateContactUseCase(contact);
     result.when(
       success: (_) {
         // 성공 시 UI 업데이트 로직 추가 가능
+        logger.d("이번");
         state = state.copyWith(
+          event: ContactEvent.updateSuccess(contact),
           contacts:
               state.contacts.map((c) {
                 if (c.id == contact.id) {
@@ -111,6 +120,7 @@ class ContactListNotifier extends StateNotifier<ContactState> {
       },
       failure: (error) {
         // 에러 처리 로직 추가 가능
+        state = state.copyWith(event: ContactEvent.updateFailure(error));
       },
     );
   }
@@ -121,11 +131,13 @@ class ContactListNotifier extends StateNotifier<ContactState> {
       success: (_) {
         // 성공 시 UI 업데이트 로직 추가 가능
         state = state.copyWith(
+          event: ContactEvent.deleteSuccess(id),
           contacts: state.contacts.where((c) => c.id != id).toList(),
         );
       },
       failure: (error) {
         // 에러 처리 로직 추가 가능
+        state = state.copyWith(event: ContactEvent.deleteFailure(error));
       },
     );
   }

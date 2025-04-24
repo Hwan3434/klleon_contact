@@ -1,4 +1,3 @@
-import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presentation/screen/contact/contact_detail_provider.dart';
@@ -31,13 +30,56 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final contactCount = ref.watch(
-      contactProvider.select((s) => s.contacts.length),
+    ref.listen(
+      contactProvider.select((value) {
+        return value.event;
+      }),
+      (prev, next) {
+        final event = next;
+        if (event != null) {
+          event.when(
+            createSuccess: (contact) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text("생성 성공")));
+            },
+            createFailure: (error) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text("생성 실패")));
+            },
+            deleteSuccess: (contact) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text("삭제 성공")));
+            },
+            deleteFailure: (error) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text("삭제 실패")));
+            },
+            updateSuccess: (contact) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text("수정 성공")));
+            },
+            updateFailure: (error) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text("수정 실패")));
+            },
+          );
+        }
+        // 다른 이벤트 핸들링
+      },
     );
-
-    logger.d("_ContactScreenState build");
-
     return Scaffold(
       appBar: AppBar(
         title: Text('연락처'),
@@ -52,10 +94,17 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
       ),
       body: Builder(
         builder: (context) {
-          logger.d("Temper build");
+          // 아이템 수정시에는 ListView 다시 그리지않도록 length 구독
+          final contactCount = ref.watch(
+            contactProvider.select((s) => s.contacts.length),
+          );
+
+          // 로딩중 상태 구독
           final isLoading = ref.watch(
             contactProvider.select((s) => s.isLoading),
           );
+
+          // 더 불러올게 있는 상태인지 구독
           final hasMore = ref.watch(contactProvider.select((s) => s.hasMore));
           if (isLoading && contactCount == 0) {
             // 초기 로딩 중
@@ -70,7 +119,6 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
             controller: _scrollController,
             itemCount: contactCount + (hasMore ? 1 : 0),
             itemBuilder: (context, index) {
-              logger.d("Item build");
               if (index == contactCount) {
                 // 더 불러오기 중 위젯
                 return const Center(child: CircularProgressIndicator());
@@ -101,16 +149,6 @@ class _ContactItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.d("_ContactItem build : ${contactId}");
-    ref.listen<Contact?>(contactDetailProvider(contactId), (previous, next) {
-      if (previous != null && next != null) {
-        if (previous.name != next.name) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${previous.name} → ${next.name} 변경됨')),
-          );
-        }
-      }
-    });
     final contact = ref.watch(contactDetailProvider(contactId))!;
     return Padding(
       padding: const EdgeInsets.all(8.0),

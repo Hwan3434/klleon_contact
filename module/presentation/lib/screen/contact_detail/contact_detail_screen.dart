@@ -8,7 +8,7 @@ import 'package:uuid/uuid.dart';
 
 enum ContactDetailMode { create, edit }
 
-class ContactDetailScreen extends ConsumerWidget {
+class ContactDetailScreen extends ConsumerStatefulWidget {
   final String? contactId;
   final ContactDetailMode mode;
   const ContactDetailScreen({super.key, required this.contactId})
@@ -16,27 +16,68 @@ class ContactDetailScreen extends ConsumerWidget {
           contactId == null ? ContactDetailMode.create : ContactDetailMode.edit;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final contact =
-        contactId == null ? null : ref.watch(contactDetailProvider(contactId!));
+  ConsumerState<ContactDetailScreen> createState() =>
+      _ContactDetailScreenState();
+}
 
-    if (contactId != null && contact == null) {
+class _ContactDetailScreenState extends ConsumerState<ContactDetailScreen> {
+  Contact? contact;
+  late TextEditingController nameController;
+  late TextEditingController phoneController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    nameController = TextEditingController();
+    phoneController = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // ref.watch는 여기서 사용 가능!
+    if (widget.contactId != null) {
+      final contact = ref.watch(contactDetailProvider(widget.contactId!));
+      if (contact != null) {
+        nameController.text = contact.name;
+        phoneController.text = contact.phone;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final contact =
+        widget.contactId == null
+            ? null
+            : ref.watch(contactDetailProvider(widget.contactId!));
+
+    if (widget.contactId != null && contact == null) {
       return Scaffold(body: Center(child: Text("알 수 없는 연락처 입니다.")));
     }
-
-    final nameController = TextEditingController(text: contact?.name ?? '');
-    final phoneController = TextEditingController(text: contact?.phone ?? '');
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(mode == ContactDetailMode.create ? '새 연락처' : '연락처 수정'),
+        title: Text(
+          widget.mode == ContactDetailMode.create ? '새 연락처' : '연락처 수정',
+        ),
         actions: [
-          if (mode == ContactDetailMode.edit)
+          if (widget.mode == ContactDetailMode.edit)
             IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {
-                if (contactId != null) {
-                  ref.read(contactProvider.notifier).deleteContact(contactId!);
+                if (widget.contactId != null) {
+                  ref
+                      .read(contactProvider.notifier)
+                      .deleteContact(widget.contactId!);
                   context.pop();
                 }
               },
@@ -58,17 +99,21 @@ class ContactDetailScreen extends ConsumerWidget {
               final uuid = Uuid();
 
               final newContact = Contact(
-                id: contactId ?? uuid.v4(),
+                id: widget.contactId ?? uuid.v4(),
                 name: nameController.text,
                 phone: phoneController.text,
               );
-              if (contactId == null) {
+              if (widget.contactId == null) {
                 ref.read(contactProvider.notifier).createContact(newContact);
+                context.pop();
               } else {
                 ref.read(contactProvider.notifier).updateContact(newContact);
+                context.pop();
               }
             },
-            child: Text(mode == ContactDetailMode.create ? '추가하기' : '수정하기'),
+            child: Text(
+              widget.mode == ContactDetailMode.create ? '추가하기' : '수정하기',
+            ),
           ),
         ],
       ),
