@@ -104,7 +104,7 @@ class _ContactItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contact = ref.watch(contactDetailProvider(contactId));
+    final contact = ref.watch(contactDetailProvider(contactId))!;
     logger.d("_ContactItem build for ${contact.id}");
     return ListTile(title: Text(contact.name), subtitle: Text(contact.phone));
   }

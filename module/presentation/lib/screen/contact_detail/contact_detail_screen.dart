@@ -6,31 +6,45 @@ import 'package:presentation/screen/contact/contact_detail_provider.dart';
 import 'package:presentation/screen/contact/contact_provider.dart';
 import 'package:uuid/uuid.dart';
 
+enum ContactDetailMode { create, edit }
+
 class ContactDetailScreen extends ConsumerWidget {
   final String? contactId;
-  const ContactDetailScreen({super.key, required this.contactId});
+  final ContactDetailMode mode;
+  const ContactDetailScreen({super.key, required this.contactId})
+    : mode =
+          contactId == null ? ContactDetailMode.create : ContactDetailMode.edit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     logger.e("ContactDetailScreen build $contactId");
-    Contact? contact;
-    if (contactId != null) {
-      logger.e(
-        "ContactId is Not Null !! $contactId / ${contactId.runtimeType}",
-      );
-      contact = ref.watch(contactDetailProvider(contactId!));
-    } else {
-      logger.e("ContactId is Null !!");
-      contact = null;
+    final contact =
+        contactId == null ? null : ref.watch(contactDetailProvider(contactId!));
+
+    if (contactId != null && contact == null) {
+      return Scaffold(body: Center(child: Text("알 수 없는 연락처 입니다.")));
     }
 
-    logger.e("ContactDetailScreen build 1");
     final nameController = TextEditingController(text: contact?.name ?? '');
     final phoneController = TextEditingController(text: contact?.phone ?? '');
 
-    logger.e("ContactDetailScreen build 2");
     return Scaffold(
-      appBar: AppBar(title: Text(contactId == null ? '새 연락처' : '연락처 수정')),
+      appBar: AppBar(
+        title: Text(mode == ContactDetailMode.create ? '새 연락처' : '연락처 수정'),
+        actions: [
+          if (mode == ContactDetailMode.edit)
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                if (contactId != null) {
+                  ref.read(contactProvider.notifier).deleteContact(contactId!);
+                  ref.invalidate(contactDetailProvider(contactId!));
+                  context.pop();
+                }
+              },
+            ),
+        ],
+      ),
       body: Column(
         children: [
           TextField(
@@ -55,9 +69,8 @@ class ContactDetailScreen extends ConsumerWidget {
               } else {
                 ref.read(contactProvider.notifier).updateContact(newContact);
               }
-              context.pop();
             },
-            child: Text(contactId == null ? '추가하기' : '수정하기'),
+            child: Text(mode == ContactDetailMode.create ? '추가하기' : '수정하기'),
           ),
         ],
       ),

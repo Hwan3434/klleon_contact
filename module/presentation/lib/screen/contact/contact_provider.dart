@@ -8,18 +8,21 @@ final contactProvider =
       final c = getIt<CreateContactUseCase>();
       final r = getIt<GetContactsUseCase>();
       final u = getIt<UpdateContactUseCase>();
-      return ContactListNotifier(c, r, u);
+      final d = getIt<DeleteContactUseCase>();
+      return ContactListNotifier(c, r, u, d);
     });
 
 class ContactListNotifier extends StateNotifier<ContactState> {
   final CreateContactUseCase _createContactUseCase;
   final UpdateContactUseCase _updateContactUseCase;
   final GetContactsUseCase _getContactsUseCase;
+  final DeleteContactUseCase _deleteContactUseCase;
 
   ContactListNotifier(
     this._createContactUseCase,
     this._getContactsUseCase,
     this._updateContactUseCase,
+    this._deleteContactUseCase,
   ) : super(
         ContactState(
           contacts: [],
@@ -111,6 +114,23 @@ class ContactListNotifier extends StateNotifier<ContactState> {
       failure: (error) {
         // 에러 처리 로직 추가 가능
         logger.e('Failed to update contact: $error');
+      },
+    );
+  }
+
+  void deleteContact(String id) async {
+    final result = await _deleteContactUseCase(id);
+    result.when(
+      success: (_) {
+        // 성공 시 UI 업데이트 로직 추가 가능
+        logger.d('Contact deleted successfully');
+        state = state.copyWith(
+          contacts: state.contacts.where((c) => c.id != id).toList(),
+        );
+      },
+      failure: (error) {
+        // 에러 처리 로직 추가 가능
+        logger.e('Failed to delete contact: $error');
       },
     );
   }

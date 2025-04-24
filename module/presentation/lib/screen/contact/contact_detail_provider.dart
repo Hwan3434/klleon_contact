@@ -1,15 +1,14 @@
+import 'package:collection/collection.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'contact_provider.dart';
 
-final contactDetailProvider = Provider.family<Contact, String>((ref, id) {
-  logger.d("콘텍트 디테일 프로바이더");
+final contactDetailProvider = Provider.family<Contact?, String>((ref, id) {
   final contact = ref.watch(
     contactProvider.select(
-      (value) => value.contacts.singleWhere((element) => element.id == id),
+      (value) => value.contacts.firstWhereOrNull((element) => element.id == id),
     ),
   );
-  assert(contact != null, "Contact not found");
   return contact;
 });

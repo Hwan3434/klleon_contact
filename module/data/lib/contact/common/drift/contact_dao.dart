@@ -22,8 +22,8 @@ class ContactDao extends DatabaseAccessor<KDriftDatabase>
     // 정렬 기준 설정 (오름차순 또는 내림차순)
     final order =
         (sortOrder ?? SortOrder.asc) == SortOrder.asc
-            ? OrderingTerm.asc(contactTable.id)
-            : OrderingTerm.desc(contactTable.id);
+            ? OrderingTerm.asc(contactTable.name)
+            : OrderingTerm.desc(contactTable.name);
 
     // 페이지네이션 오프셋 계산
     final offset = (pageNumber - 1) * pageSize;
