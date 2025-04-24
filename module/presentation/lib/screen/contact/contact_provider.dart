@@ -1,19 +1,17 @@
 import 'package:di/di.dart';
 import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:presentation/screen/contact/contact_list_state.dart';
+import 'package:presentation/screen/contact/contact_state.dart';
 
-/// TODO contactListProvider -> contactProvider 로 변경
-/// 이유는 얘는 리스트 뿐만아니라 삽입, 삭제 수정까지 앱 전역에서 이쪽으로 접근 해야하기 때문
-final contactListProvider =
-    StateNotifierProvider<ContactListNotifier, ContactListState>((ref) {
+final contactProvider =
+    StateNotifierProvider<ContactListNotifier, ContactState>((ref) {
       final c = getIt<CreateContactUseCase>();
       final r = getIt<GetContactsUseCase>();
       final u = getIt<UpdateContactUseCase>();
       return ContactListNotifier(c, r, u);
     });
 
-class ContactListNotifier extends StateNotifier<ContactListState> {
+class ContactListNotifier extends StateNotifier<ContactState> {
   final CreateContactUseCase _createContactUseCase;
   final UpdateContactUseCase _updateContactUseCase;
   final GetContactsUseCase _getContactsUseCase;
@@ -23,7 +21,7 @@ class ContactListNotifier extends StateNotifier<ContactListState> {
     this._getContactsUseCase,
     this._updateContactUseCase,
   ) : super(
-        ContactListState(
+        ContactState(
           contacts: [],
           isLoading: false,
           hasMore: true,

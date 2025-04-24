@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presentation/screen/contact/contact_detail_provider.dart';
 
-import 'contact_list_provider.dart';
+import 'contact_provider.dart';
 
 typedef GoContactDetailCallback = void Function(int contactId);
 
@@ -25,7 +25,7 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
         // 바닥 근처 도달 시 다음 페이지 요청
-        ref.read(contactListProvider.notifier).more();
+        ref.read(contactProvider.notifier).more();
       }
     });
   }
@@ -33,7 +33,7 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
   @override
   Widget build(BuildContext context) {
     // contact 정보 구독
-    final vm = ref.watch(contactListProvider);
+    final vm = ref.watch(contactProvider);
     return Scaffold(
       appBar: AppBar(title: Text('연락처')),
       body: Builder(

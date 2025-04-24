@@ -2,9 +2,9 @@
 import 'package:domain/domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'contact_list_state.dart';
+import 'contact_state.dart';
 
-class ContactViewModel extends StateNotifier<ContactListState> {
+class ContactViewModel extends StateNotifier<ContactState> {
   final CreateContactUseCase _createContactUseCase;
   final UpdateContactUseCase _updateContactUseCase;
   final GetContactsUseCase _getContactsUseCase;
@@ -14,7 +14,7 @@ class ContactViewModel extends StateNotifier<ContactListState> {
     this._getContactsUseCase,
     this._updateContactUseCase,
   ) : super(
-        ContactListState(
+        ContactState(
           contacts: [],
           isLoading: false,
           hasMore: true,
