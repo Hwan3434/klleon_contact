@@ -80,14 +80,10 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
                   .read(contactProvider.notifier)
                   .getContact(index);
 
-              return InkWell(
-                onTap: () {
-                  widget.onPressed?.call(contact.id);
-                },
-                child: _ContactItem(
-                  key: ValueKey(contact.id),
-                  contactId: contact.id,
-                ),
+              return _ContactItem(
+                key: ValueKey(contact.id),
+                contactId: contact.id,
+                onPressed: widget.onPressed,
               );
             },
           );
@@ -98,14 +94,43 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
 }
 
 class _ContactItem extends ConsumerWidget {
+  final GoContactDetailCallback? onPressed;
   final String contactId;
 
-  const _ContactItem({super.key, required this.contactId});
+  const _ContactItem({super.key, required this.contactId, this.onPressed});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    logger.d("_ContactItem build : ${contactId}");
+    ref.listen<Contact?>(contactDetailProvider(contactId), (previous, next) {
+      if (previous != null && next != null) {
+        if (previous.name != next.name) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${previous.name} → ${next.name} 변경됨')),
+          );
+        }
+      }
+    });
     final contact = ref.watch(contactDetailProvider(contactId))!;
-    logger.d("_ContactItem build for ${contact.id}");
-    return ListTile(title: Text(contact.name), subtitle: Text(contact.phone));
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [Text(contact.name), Text(contact.phone)],
+          ),
+          const Spacer(),
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              onPressed?.call(contact.id);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

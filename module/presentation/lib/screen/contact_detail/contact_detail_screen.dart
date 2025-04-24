@@ -17,7 +17,6 @@ class ContactDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    logger.e("ContactDetailScreen build $contactId");
     final contact =
         contactId == null ? null : ref.watch(contactDetailProvider(contactId!));
 
@@ -38,7 +37,6 @@ class ContactDetailScreen extends ConsumerWidget {
               onPressed: () {
                 if (contactId != null) {
                   ref.read(contactProvider.notifier).deleteContact(contactId!);
-                  ref.invalidate(contactDetailProvider(contactId!));
                   context.pop();
                 }
               },

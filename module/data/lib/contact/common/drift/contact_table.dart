@@ -6,4 +6,6 @@ class ContactTable extends Table {
   TextColumn get id => text()(); // PK
   TextColumn get name => text()();
   TextColumn get phone => text()();
+  @override
+  Set<Column> get primaryKey => {id}; // PK 지정
 }

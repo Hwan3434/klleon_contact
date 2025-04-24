@@ -90,7 +90,6 @@ class ContactListNotifier extends StateNotifier<ContactState> {
       },
       failure: (error) {
         // 에러 처리 로직 추가 가능
-        logger.e('Failed to create contact: $error');
       },
     );
   }
@@ -100,7 +99,6 @@ class ContactListNotifier extends StateNotifier<ContactState> {
     result.when(
       success: (_) {
         // 성공 시 UI 업데이트 로직 추가 가능
-        logger.d('Contact updated successfully');
         state = state.copyWith(
           contacts:
               state.contacts.map((c) {
@@ -113,7 +111,6 @@ class ContactListNotifier extends StateNotifier<ContactState> {
       },
       failure: (error) {
         // 에러 처리 로직 추가 가능
-        logger.e('Failed to update contact: $error');
       },
     );
   }
@@ -123,14 +120,12 @@ class ContactListNotifier extends StateNotifier<ContactState> {
     result.when(
       success: (_) {
         // 성공 시 UI 업데이트 로직 추가 가능
-        logger.d('Contact deleted successfully');
         state = state.copyWith(
           contacts: state.contacts.where((c) => c.id != id).toList(),
         );
       },
       failure: (error) {
         // 에러 처리 로직 추가 가능
-        logger.e('Failed to delete contact: $error');
       },
     );
   }
