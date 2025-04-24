@@ -11,6 +11,17 @@ class ContactLocalDatasourceImpl implements ContactLocalDatasource {
   ContactLocalDatasourceImpl(this._contactDao);
 
   @override
+  Future<ContactDTO> getContactById(String id) {
+    return _contactDao.getContactById(id).then((contact) {
+      return ContactDTO(
+        id: contact.id,
+        name: contact.name,
+        phoneNumber: contact.phone,
+      );
+    });
+  }
+
+  @override
   Future<List<ContactDTO>> getContacts(ContactFilter filter) async {
     return await _contactDao
         .getContactsWithPaging(

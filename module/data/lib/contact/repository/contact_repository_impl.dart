@@ -8,6 +8,12 @@ class ContactRepositoryImpl implements ContactRepository {
   ContactRepositoryImpl(this._localDatasource);
 
   @override
+  Future<Contact> getContactById(String id) async {
+    final contactDTO = await _localDatasource.getContactById(id);
+    return contactDTO.toEntity();
+  }
+
+  @override
   Future<List<Contact>> getContacts(ContactFilter filter) async {
     if (filter.pageNumber < 1) {
       throw ArgumentError('페이지는 1부터 시작입니다. 1보다 작은 값은 허용되지 않습니다.');

@@ -12,6 +12,9 @@ class ContactDao extends DatabaseAccessor<KDriftDatabase>
     with _$ContactDaoMixin {
   ContactDao(KDriftDatabase db) : super(db);
 
+  Future<ContactTableData> getContactById(String id) =>
+      (select(contactTable)..where((tbl) => tbl.id.equals(id))).getSingle();
+
   /// 페이징 처리 및 정렬, 검색 조건이 포함된 연락처 조회
   Future<List<ContactTableData>> getContactsWithPaging({
     required int pageNumber,

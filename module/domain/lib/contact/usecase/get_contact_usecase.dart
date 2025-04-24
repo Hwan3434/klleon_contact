@@ -16,4 +16,13 @@ class GetContactsUseCase {
       return KResult.failure(e);
     }
   }
+
+  Future<KResult<Contact>> callById({required String id}) async {
+    try {
+      final contact = await repository.getContactById(id);
+      return KResult.success(contact);
+    } catch (e) {
+      return KResult.failure(e);
+    }
+  }
 }
