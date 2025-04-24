@@ -16,16 +16,4 @@ class GetContactsUseCase {
       return KResult.failure(e);
     }
   }
-
-  Stream<KResult<List<Contact>>> stream({
-    required ContactFilter filter,
-  }) async* {
-    try {
-      await for (final contacts in repository.streamContacts(filter)) {
-        yield KResult.success(contacts);
-      }
-    } catch (e) {
-      yield KResult.failure(e);
-    }
-  }
 }

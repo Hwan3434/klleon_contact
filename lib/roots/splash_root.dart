@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presentation/splash_screen.dart';
+import 'package:presentation/screen/splash/splash_screen.dart';
 
 class SplashRoot extends StatelessWidget {
   final VoidCallback? onPressed;

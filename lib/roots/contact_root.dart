@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presentation/contact_screen.dart';
+import 'package:presentation/screen/contact/contact_screen.dart';
 
 class ContactRoot extends StatelessWidget {
   final GoContactDetailCallback? onPressed;

@@ -13,6 +13,6 @@ class KlleonThemeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// TODO Theme Riverpod 추가
-    return KlleonRouterWidget(themeMode: ThemeMode.light);
+    return KlleonRouterWidget(themeMode: ThemeMode.dark);
   }
 }
