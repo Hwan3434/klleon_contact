@@ -5,7 +5,7 @@ import 'package:presentation/screen/contact/contact_detail_provider.dart';
 
 import 'contact_provider.dart';
 
-typedef GoContactDetailCallback = void Function(String contactId);
+typedef GoContactDetailCallback = void Function(String? contactId);
 
 class ContactScreen extends ConsumerStatefulWidget {
   final GoContactDetailCallback? onPressed;
@@ -39,7 +39,17 @@ class _ContactScreenState extends ConsumerState<ContactScreen> {
     logger.d("_ContactScreenState build");
 
     return Scaffold(
-      appBar: AppBar(title: Text('연락처')),
+      appBar: AppBar(
+        title: Text('연락처'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              widget.onPressed?.call(null);
+            },
+          ),
+        ],
+      ),
       body: Builder(
         builder: (context) {
           logger.d("Temper build");

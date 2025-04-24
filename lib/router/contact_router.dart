@@ -23,7 +23,11 @@ final contactRouter = GoRouter(
       builder: (context, state) {
         return ContactRoot(
           onPressed: (contactId) {
-            context.go("${RouterPath.contact}/$contactId");
+            if (contactId != null) {
+              context.go("${RouterPath.contact}/$contactId"); // 수정
+            } else {
+              context.go("${RouterPath.contact}/new"); // 생성
+            }
           },
         );
       },
@@ -32,7 +36,11 @@ final contactRouter = GoRouter(
           path: RouterPath.contactDetail,
           builder: (context, state) {
             final contactId = state.pathParameters['contactId'];
-            return ContactDetailRoot(contactId: contactId);
+            if (contactId == 'new') {
+              return ContactDetailRoot(contactId: null);
+            } else {
+              return ContactDetailRoot(contactId: contactId);
+            }
           },
         ),
       ],

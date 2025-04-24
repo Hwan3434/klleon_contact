@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'contact_provider.dart';
 
 final contactDetailProvider = Provider.family<Contact, String>((ref, id) {
+  logger.d("콘텍트 디테일 프로바이더");
   final contact = ref.watch(
     contactProvider.select(
       (value) => value.contacts.singleWhere((element) => element.id == id),

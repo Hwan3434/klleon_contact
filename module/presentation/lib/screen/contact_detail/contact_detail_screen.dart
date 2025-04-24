@@ -8,16 +8,27 @@ import 'package:uuid/uuid.dart';
 
 class ContactDetailScreen extends ConsumerWidget {
   final String? contactId;
-  const ContactDetailScreen({super.key, this.contactId});
+  const ContactDetailScreen({super.key, required this.contactId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contact =
-        contactId != null ? ref.watch(contactDetailProvider(contactId!)) : null;
+    logger.e("ContactDetailScreen build $contactId");
+    Contact? contact;
+    if (contactId != null) {
+      logger.e(
+        "ContactId is Not Null !! $contactId / ${contactId.runtimeType}",
+      );
+      contact = ref.watch(contactDetailProvider(contactId!));
+    } else {
+      logger.e("ContactId is Null !!");
+      contact = null;
+    }
 
+    logger.e("ContactDetailScreen build 1");
     final nameController = TextEditingController(text: contact?.name ?? '');
     final phoneController = TextEditingController(text: contact?.phone ?? '');
 
+    logger.e("ContactDetailScreen build 2");
     return Scaffold(
       appBar: AppBar(title: Text(contactId == null ? '새 연락처' : '연락처 수정')),
       body: Column(
