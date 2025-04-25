@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'contact_event.freezed.dart';
 
+/// DB 변화 이벤트
 @freezed
 sealed class ContactEvent with _$ContactEvent {
   const factory ContactEvent.createSuccess(Contact contact) = CreateSuccess;

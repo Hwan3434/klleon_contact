@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:presentation/screen/contact/contact_screen.dart';
+import 'package:presentation/screen/contact/contact_list_screen.dart';
 
 class ContactRoot extends StatelessWidget {
-  final GoContactDetailCallback? onPressed;
-  const ContactRoot({required this.onPressed});
+  const ContactRoot();
 
   @override
   Widget build(BuildContext context) {
-    return ContactScreen(onPressed: onPressed);
+    return const ContactListScreen();
   }
 }

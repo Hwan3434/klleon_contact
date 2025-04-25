@@ -2,18 +2,16 @@ import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:presentation/screen/contact/contact_detail_provider.dart';
-import 'package:presentation/screen/contact/contact_provider.dart';
+import 'package:presentation/common/contect_control_event_provider.dart';
+import 'package:presentation/screen/contact_detail/contact_detail_provider.dart';
+import 'package:presentation/screen/contact_detail/contact_detail_screen_type.dart';
 import 'package:uuid/uuid.dart';
 
-enum ContactDetailMode { create, edit }
+const createContactId = "new";
 
 class ContactDetailScreen extends ConsumerStatefulWidget {
   final String? contactId;
-  final ContactDetailMode mode;
-  const ContactDetailScreen({super.key, required this.contactId})
-    : mode =
-          contactId == null ? ContactDetailMode.create : ContactDetailMode.edit;
+  const ContactDetailScreen({super.key, required this.contactId});
 
   @override
   ConsumerState<ContactDetailScreen> createState() =>
@@ -21,30 +19,14 @@ class ContactDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _ContactDetailScreenState extends ConsumerState<ContactDetailScreen> {
-  Contact? contact;
   late TextEditingController nameController;
   late TextEditingController phoneController;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     nameController = TextEditingController();
     phoneController = TextEditingController();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    // ref.watch는 여기서 사용 가능!
-    if (widget.contactId != null) {
-      final contact = ref.watch(contactDetailProvider(widget.contactId!));
-      if (contact != null) {
-        nameController.text = contact.name;
-        phoneController.text = contact.phone;
-      }
-    }
   }
 
   @override
@@ -54,31 +36,81 @@ class _ContactDetailScreenState extends ConsumerState<ContactDetailScreen> {
     super.dispose();
   }
 
+  /// DB 이벤트 변화 구독
+  void changedContactEvent() {
+    ref.listen(
+      contactControlEventProvider.select((event) {
+        return event;
+      }),
+      (previous, next) {
+        final event = next;
+        if (event != null) {
+          event.when(
+            createSuccess: (Contact contact) {
+              context.pop();
+            },
+            createFailure: (Object error) {},
+            updateSuccess: (Contact contact) {
+              context.pop();
+            },
+            updateFailure: (Object error) {},
+            deleteSuccess: (String contactId) {
+              context.pop();
+            },
+            deleteFailure: (Object error) {},
+          );
+        }
+      },
+    );
+  }
+
+  void contactDetailListener() {
+    final id = widget.contactId ?? createContactId;
+    ref.listen(
+      contactDetailProvider(id).select((value) {
+        return value.event;
+      }),
+      (previous, next) {
+        final event = next;
+        if (event != null) {
+          event.when(
+            fetchSuccess: (contact) {
+              nameController.text = contact.name;
+              phoneController.text = contact.phone;
+            },
+            fetchError: (message) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("새로운 연락처 만들기")));
+            },
+          );
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final contact =
-        widget.contactId == null
-            ? null
-            : ref.watch(contactDetailProvider(widget.contactId!));
+    changedContactEvent();
+    contactDetailListener();
 
-    if (widget.contactId != null && contact == null) {
-      return Scaffold(body: Center(child: Text("알 수 없는 연락처 입니다.")));
-    }
+    final contactDetailState = ref.watch(
+      contactDetailProvider(widget.contactId ?? createContactId),
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.mode == ContactDetailMode.create ? '새 연락처' : '연락처 수정',
-        ),
+        title: Text(contactDetailState.mode.appTitle),
         actions: [
-          if (widget.mode == ContactDetailMode.edit)
+          if (contactDetailState.mode == ContactDetailScreenType.update)
             IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {
-                if (widget.contactId != null) {
+                if (contactDetailState.id != createContactId) {
+                  final deleteId = contactDetailState.id;
                   ref
-                      .read(contactProvider.notifier)
-                      .deleteContact(widget.contactId!);
-                  context.pop();
+                      .read(contactDetailProvider(deleteId).notifier)
+                      .deleteContact(ref, deleteId);
                 }
               },
             ),
@@ -96,24 +128,31 @@ class _ContactDetailScreenState extends ConsumerState<ContactDetailScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              final uuid = Uuid();
-
-              final newContact = Contact(
-                id: widget.contactId ?? uuid.v4(),
-                name: nameController.text,
-                phone: phoneController.text,
-              );
               if (widget.contactId == null) {
-                ref.read(contactProvider.notifier).createContact(newContact);
-                context.pop();
+                ref
+                    .read(contactDetailProvider(createContactId).notifier)
+                    .createContact(
+                      ref,
+                      Contact(
+                        id: Uuid().v4(),
+                        name: nameController.text,
+                        phone: phoneController.text,
+                      ),
+                    );
               } else {
-                ref.read(contactProvider.notifier).updateContact(newContact);
-                context.pop();
+                ref
+                    .read(contactDetailProvider(widget.contactId!).notifier)
+                    .updateContact(
+                      ref,
+                      Contact(
+                        id: widget.contactId!,
+                        name: nameController.text,
+                        phone: phoneController.text,
+                      ),
+                    );
               }
             },
-            child: Text(
-              widget.mode == ContactDetailMode.create ? '추가하기' : '수정하기',
-            ),
+            child: Text(contactDetailState.mode.submitButtonText),
           ),
         ],
       ),

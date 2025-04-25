@@ -5,7 +5,7 @@ import 'package:klleon/klleon_theme_widget.dart';
 
 void main() {
   setupDi();
-  runApp(ProviderScope(child: KlleonApp()));
+  runApp(ProviderScope(child: const KlleonApp()));
 }
 
 class KlleonApp extends StatelessWidget {
