@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presentation/common/contect_control_event_provider.dart';
 import 'package:presentation/common/screen_path.dart';
+import 'package:presentation/util/klleon_snack_bar.dart';
 
 import 'contact_list_provider.dart';
 
@@ -45,36 +46,24 @@ class _ContactListScreenState extends ConsumerState<ContactListScreen> {
           event.when(
             createSuccess: (contact) {
               ref.read(contactListProvider.notifier).refresh();
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text("생성 성공")));
+              KlleonSnackBar.show(context, "생성 성공");
             },
             createFailure: (error) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text("생성 실패")));
+              KlleonSnackBar.show(context, "생성 실패");
             },
             deleteSuccess: (id) {
               ref.read(contactListProvider.notifier).deleteById(id);
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text("삭제 성공")));
+              KlleonSnackBar.show(context, "삭제 성공");
             },
             deleteFailure: (error) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text("삭제 실패")));
+              KlleonSnackBar.show(context, "삭제 실패");
             },
             updateSuccess: (contact) {
               ref.read(contactListProvider.notifier).update(contact);
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text("수정 성공")));
+              KlleonSnackBar.show(context, "수정 성공");
             },
             updateFailure: (error) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text("수정 실패")));
+              KlleonSnackBar.show(context, "수정 실패");
             },
           );
         }

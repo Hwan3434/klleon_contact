@@ -7,4 +7,5 @@ part 'contact_detail_event.freezed.dart';
 sealed class ContactDetailEvent with _$ContactDetailEvent {
   const factory ContactDetailEvent.fetchSuccess(Contact contact) = FetchSuccess;
   const factory ContactDetailEvent.fetchError(Object message) = FetchError;
+  const factory ContactDetailEvent.validate(String message) = Validate;
 }

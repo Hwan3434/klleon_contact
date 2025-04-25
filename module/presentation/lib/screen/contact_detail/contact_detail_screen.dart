@@ -1,10 +1,12 @@
 import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:presentation/common/contect_control_event_provider.dart';
 import 'package:presentation/screen/contact_detail/contact_detail_provider.dart';
 import 'package:presentation/screen/contact_detail/contact_detail_screen_type.dart';
+import 'package:presentation/util/klleon_snack_bar.dart';
 import 'package:uuid/uuid.dart';
 
 const createContactId = "new";
@@ -79,9 +81,10 @@ class _ContactDetailScreenState extends ConsumerState<ContactDetailScreen> {
               phoneController.text = contact.phone;
             },
             fetchError: (message) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text("새로운 연락처 만들기")));
+              KlleonSnackBar.show(context, "새로운 연락처 만들기");
+            },
+            validate: (String message) {
+              KlleonSnackBar.show(context, message);
             },
           );
         }
@@ -124,6 +127,10 @@ class _ContactDetailScreenState extends ConsumerState<ContactDetailScreen> {
           ),
           TextField(
             controller: phoneController,
+            keyboardType: TextInputType.number, // 숫자 키패드
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly, // 숫자만 입력 가능
+            ],
             decoration: InputDecoration(labelText: '전화번호'),
           ),
           ElevatedButton(

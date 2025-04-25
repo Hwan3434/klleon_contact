@@ -54,14 +54,43 @@ class ContactDetailNotifier extends StateNotifier<ContactDetailScreenState> {
   }
 
   void createContact(WidgetRef ref, Contact contact) {
+    if (contact.name.isEmpty) {
+      state = state.copyWith(event: ContactDetailEvent.validate("이름을 입력해주세요."));
+      return;
+    }
+    if (!contact.phone._isPhoneNumber) {
+      state = state.copyWith(
+        event: ContactDetailEvent.validate("전화번호가 올바르지않습니다."),
+      );
+      return;
+    }
     ref.read(contactControlEventProvider.notifier).createContact(contact);
   }
 
   void updateContact(WidgetRef ref, Contact contact) {
+    if (contact.name.isEmpty) {
+      state = state.copyWith(event: ContactDetailEvent.validate("이름을 입력해주세요."));
+      return;
+    }
+    if (!contact.phone._isPhoneNumber) {
+      state = state.copyWith(
+        event: ContactDetailEvent.validate("전화번호가 올바르지않습니다."),
+      );
+      return;
+    }
     ref.read(contactControlEventProvider.notifier).updateContact(contact);
   }
 
   void deleteContact(WidgetRef ref, String id) {
     ref.read(contactControlEventProvider.notifier).deleteContact(id);
+  }
+}
+
+extension PhoneNumberValidation on String {
+  bool get _isPhoneNumber {
+    final phoneRegExp = RegExp(
+      r'^(01[0|1|6|7|8|9])[-]?[0-9]{3,4}[-]?[0-9]{4}$',
+    );
+    return phoneRegExp.hasMatch(this);
   }
 }
