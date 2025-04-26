@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -145,9 +146,16 @@ class _ContactItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contact = ref.watch(
       contactListProvider.select((value) {
-        return value.contacts.singleWhere((element) => element.id == contactId);
+        return value.contacts.singleWhereOrNull(
+          (element) => element.id == contactId,
+        );
       }),
     );
+
+    if (contact == null) {
+      return const SizedBox.shrink();
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
